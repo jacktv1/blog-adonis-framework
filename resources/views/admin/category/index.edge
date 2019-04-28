@@ -1,0 +1,162 @@
+@layout('admin.layouts.master')
+
+@section('content')
+<section role="main" class="content-body">
+        <header class="page-header">
+            <h2>Advanced Tables</h2>
+        
+            <div class="right-wrapper text-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Tables</span></li>
+                    <li><span>Advanced</span></li>
+                </ol>
+        
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fas fa-chevron-left"></i></a>
+            </div>
+        </header>
+
+        <!-- start: page -->
+            <div class="row">
+                <div class="col-md-7">
+                    <section class="card">
+                        <header class="card-header">
+                            <div class="card-actions">
+                                <a href="tables-advanced.html#" class="card-action card-action-toggle" data-card-toggle></a>
+                                <a href="tables-advanced.html#" class="card-action card-action-dismiss" data-card-dismiss></a>
+                            </div>
+            
+                            <h2 class="card-title">List Category</h2>
+                        </header>
+                        <div class="card-body">
+                            <table class="table table-bordered table-striped mb-0" id="category-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th class="actions">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @each(category in categories)
+                                    <tr>
+                                        <td> {{ category.title }}</td>
+                                        <td class="actions float-right">
+                                            <a class="on-default edit-row"><i class="fas fa-pencil-alt"></i></a>
+                                            <a onclick="showConfirmDeleteModal({{ category.id }})" class="on-default remove-row"><i class="far fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                    @endeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-md-5">
+                        <section class="card">
+                            <header class="card-header">
+                                <div class="card-actions">
+                                    <a href="tables-advanced.html#" class="card-action card-action-toggle" data-card-toggle></a>
+                                    <a href="tables-advanced.html#" class="card-action card-action-dismiss" data-card-dismiss></a>
+                                </div>
+                                <h2 class="card-title">Create Category</h2>
+                            </header>
+                            <div class="card-body">
+                                <div class="row form-group">
+                                    <div class="col-lg-12">
+                                        <form method="POST" action="{{ route('admin.category.create') }}">
+                                            {{ csrfField() }}
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold text-dark">Title</label>
+                                                <input type="text" id="title" name="title" class="form-control" placeholder="Title must from 10 to 100 character">
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-success float-right">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+            </div>
+        <!-- end: page -->
+    </section>
+
+    <script>
+
+        function post(path, parameters) {
+            var form = $('<form></form>');
+
+            form.attr("method", "post");
+            form.attr("action", path);
+            var csrf = $('{{ csrfField() }}');
+            form.append(csrf);
+            console.log(csrf, '{{ csrfField() }}');
+            $.each(parameters, function(key, value) {
+                var field = $('<input />');
+                field.attr("type", "hidden");
+                field.attr("name", key);
+                field.attr("value", value);
+                form.append(field);
+            });
+
+            // The form needs to be a part of the document in
+            // order for us to be able to submit it.
+            $(document.body).append(form);
+            form.submit();
+        }
+
+        function showConfirmDeleteModal(id) {
+            var stack_modal = {"dir1": "down", "dir2": "right", "push": "top", "modal": true, "overlay_close": true};
+            var notice = new PNotify({
+                title: 'Confirm',
+                text: 'Are you sure to delete this category',
+                icon: 'fas fa-question-circle',
+                hide: false,
+                type: 'error',
+                stack: stack_modal,
+                animation: 'show',
+                animate_speed: 'fast',
+                width: '400px',
+                min_height: '100px',
+                addclass: "stack-modal",
+                confirm: {
+                    confirm: true,
+                    prompt: false,
+                    
+                    buttons: [
+                        {
+                            text: "Ok",
+                            addClass: "",
+                            promptTrigger: true,
+                            click: function (notice, value) {
+                                post('{{ route('admin.category.destroy') }}', {id})
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            addClass: "",
+                            click: function (notice) {
+                                notice.remove();
+                                notice.get().trigger("pnotify.cancel",
+                                notice);
+                            }
+                        }
+                    ]
+                },
+                buttons: {
+                    closer: false,
+                    sticker: false
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#category-datatable').dataTable();
+        })
+    </script>
+@endsection

@@ -1,0 +1,125 @@
+@layout('layouts.master')
+
+@section('content')
+
+<!-- Start of Page Container -->
+<div class="page-container">
+    <div class="container">
+            <div class="row">
+
+                    <!-- start of page content -->
+                    <div class="span8 main-listing">
+
+                        @each(post in posts.data)
+                            <article class="format-standard type-post hentry clearfix">
+                                    <header class="clearfix">
+                                            <h3 class="post-title">
+                                                    <a href="{{ route('post-single', { id: post.id}) }}">{{ post.title }}</a>
+                                            </h3>
+                                            <div class="post-meta clearfix">
+                                                    <span class="date">{{ DateTimeHelper.format(post.publish_at, 'DD/MM/YYYY') }}</span>
+                                                    <span class="category"><a href="articles-list.html#" title="View all posts in Server &amp; Database">Server &amp; Database</a></span>
+                                                    <span class="comments"><a href="articles-list.html#" title="Comment on Integrating WordPress with Your Website">3 Comments</a></span>
+                                                    <span class="like-count">{{ post.like }}</span>
+                                            </div><!-- end of post meta -->
+                                    </header>
+                                <p>
+                                        {{{ truncate(post.content, 150, '...') }}}
+                                <a class="readmore-link" href="{{ route('post-single', { id: post.id}) }}">Read more</a>
+                                </p>
+
+                            </article>
+                        @endeach
+                            <div id="pagination">
+                                @if(posts.page > 1)
+                                        <a href="{{ route('home') }}?page=1" class="btn">« First</a>
+                                        <a href="{{ route('home') }}?page={{posts.page - 1}}" class="btn">« Prev</a>        
+                                @else
+                                        <a class="btn" disabled>« First</a>
+                                        <a class="btn" disabled>« Prev</a>
+                                @endif
+                                @each(page in range(1, posts.lastPage + 1))  
+                                        <a href="{{ route('home') }}?page={{page}}" class="btn {{ page == posts.page ? 'active' : '' }}">{{ page }}</a>
+                                @endeach
+                                @if(posts.page < posts.lastPage)
+                                        <a href="{{ route('home') }}?page={{posts.page + 1}}" class="btn">Next »</a>
+                                        <a href="{{ route('home') }}?page={{posts.lastPage}}" class="btn">Last »</a>
+                                @else
+                                        <a class="btn" disabled>Next »</a>
+                                        <a class="btn" disabled>Last »</a>
+                                @endif
+                                    
+                            </div>
+                       
+                    </div>
+                    <!-- end of page content -->
+
+
+                    <!-- start of sidebar -->
+                    <aside class="span4 page-sidebar">
+
+                            <section class="widget">
+                                    <div class="support-widget">
+                                            <h3 class="title">Support</h3>
+                                            <p class="intro">Need more support? If you did not found an answer, contact us for further help.</p>
+                                    </div>
+                            </section>
+
+
+                            <section class="widget">
+                                    <h3 class="title">Featured Articles</h3>
+                                    <ul class="articles">
+                                            <li class="article-entry standard">
+                                                    <h4><a href="single.html">Integrating WordPress with Your Website</a></h4>
+                                                    <span class="article-meta">25 Feb, 2013 in <a href="articles-list.html#" title="View all posts in Server &amp; Database">Server &amp; Database</a></span>
+                                                    <span class="like-count">66</span>
+                                            </li>
+                                            <li class="article-entry standard">
+                                                    <h4><a href="single.html">WordPress Site Maintenance</a></h4>
+                                                    <span class="article-meta">24 Feb, 2013 in <a href="articles-list.html#" title="View all posts in Website Dev">Website Dev</a></span>
+                                                    <span class="like-count">15</span>
+                                            </li>
+                                            <li class="article-entry video">
+                                                    <h4><a href="single.html">Meta Tags in WordPress</a></h4>
+                                                    <span class="article-meta">23 Feb, 2013 in <a href="articles-list.html#" title="View all posts in Website Dev">Website Dev</a></span>
+                                                    <span class="like-count">8</span>
+                                            </li>
+                                            <li class="article-entry image">
+                                                    <h4><a href="single.html">WordPress in Your Language</a></h4>
+                                                    <span class="article-meta">22 Feb, 2013 in <a href="articles-list.html#" title="View all posts in Advanced Techniques">Advanced Techniques</a></span>
+                                                    <span class="like-count">6</span>
+                                            </li>
+                                    </ul>
+                            </section>
+
+
+
+                            <section class="widget"><h3 class="title">Categories</h3>
+                                    <ul>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet,">Advanced Techniques</a> </li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet,">Designing in WordPress</a></li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet,">Server &amp; Database</a></li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet, ">Theme Development</a></li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet,">Website Dev</a></li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet,">WordPress for Beginners</a></li>
+                                            <li><a href="articles-list.html#" title="Lorem ipsum dolor sit amet, ">WordPress Plugins</a></li>
+                                    </ul>
+                            </section>
+
+                            <section class="widget">
+                                    <h3 class="title">Recent Comments</h3>
+                                    <ul id="recentcomments">
+                                            <li class="recentcomments"><a href="articles-list.html#" rel="external nofollow" class="url">John Doe</a> on <a href="articles-list.html#">Integrating WordPress with Your Website</a></li>
+                                            <li class="recentcomments">saqib sarwar on <a href="articles-list.html#">Integrating WordPress with Your Website</a></li>
+                                            <li class="recentcomments"><a href="articles-list.html#" rel="external nofollow" class="url">John Doe</a> on <a href="articles-list.html#">Integrating WordPress with Your Website</a></li>
+                                            <li class="recentcomments"><a href="articles-list.html#" rel="external nofollow" class="url">Mr WordPress</a> on <a href="articles-list.html#">Installing WordPress</a></li>
+                                    </ul>
+                            </section>
+
+                    </aside>
+                    <!-- end of sidebar -->
+            </div>
+    </div>
+</div>
+<!-- End of Page Container -->
+@endsection

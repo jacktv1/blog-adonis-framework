@@ -1,0 +1,101 @@
+@layout('admin.layouts.master')
+
+@section('content')
+<section role="main" class="content-body card-margin">
+    <header class="page-header">
+        <h2>Write New Post</h2>
+    
+        <div class="right-wrapper text-right">
+            <ol class="breadcrumbs">
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li><span>Post</span></li>
+                <li><span>Write</span></li>
+            </ol>
+    
+            <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fas fa-chevron-left"></i></a>
+        </div>
+    </header>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="card">
+                <form method="POST" action="{{ route('admin.post.store') }}">
+                    {{ csrfField() }}
+                    <header class="card-header">
+                        <div class="card-actions">
+                            <!--
+                            <a href="forms-layouts.html#" class="card-action card-action-toggle" data-card-toggle></a>
+                            <a href="forms-layouts.html#" class="card-action card-action-dismiss" data-card-dismiss></a>
+                            -->
+                        </div>
+
+                        <h2 class="card-title">Write New Post</h2>
+                    </header>
+                    <div class="card-body">
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="col-form-label font-weight-bold text-dark">Title</label>
+                                    <input type="text" id="title" name="title" class="form-control" placeholder="Title must from 10 to 255 character">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="col-form-label font-weight-bold text-dark">Category</label>
+                                    <div class="input-group">
+                                        <select name="categories" class="form-control" multiple="multiple" data-plugin-options='{ "maxHeight": 200 }' data-plugin-selectTwo id="category_select">
+                                            @each(category in categories)
+                                                <option value="{{ category.id }}">{{ category.title }}</option>
+                                            @endeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="col-form-label font-weight-bold text-dark">Content</label>
+                                    <textarea name="content" class="summernote" data-plugin-summernote data-plugin-options='{ "height": 180, "codemirror": { "theme": "ambiance" } }'></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="card-footer text-right">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </footer>
+                </form>
+            </section>
+        </div>
+    </div>
+    <!-- end: page -->
+</section>
+
+@if(flashMessage('status') && flashMessage('message'))
+<script>
+    $(document).ready(function() {
+        var type = '{{ flashMessage('status') == true ? 'success' : 'danger'}}'
+        var stack_bar_top = {"dir1": "down", "dir2": "right", "push": "top", "spacing1": 0, "spacing2": 0};
+        var notice = new PNotify({
+            title: 'Notification',
+            text: '{{ flashMessage('message') }}',
+            type: type,
+            addclass: 'stack-bar-top',
+            stack: stack_bar_top,
+            width: "100%",
+            buttons: {
+                sticker: false
+            }
+        });
+    })
+</script>
+@endif
+
+@endsection
